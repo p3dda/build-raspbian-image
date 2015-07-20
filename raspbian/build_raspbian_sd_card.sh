@@ -75,6 +75,8 @@ if [ "${deb_local_mirror}" == "" ]; then
   deb_local_mirror=${deb_mirror}
 fi
 
+wget -q -O - https://archive.raspbian.org/raspbian.public.key | apt-key add -
+
 bootsize="64M"
 deb_release="wheezy"
 
@@ -168,7 +170,7 @@ mount -o bind ${delivery_path} ${rootfs}/usr/src/delivery
 
 cd ${rootfs}
 
-debootstrap --foreign --arch armhf ${deb_release} ${rootfs} ${deb_local_mirror}
+debootstrap --keyring /etc/apt/trusted.gpg --foreign --arch armhf ${deb_release} ${rootfs} ${deb_local_mirror}
 cp /usr/bin/qemu-arm-static usr/bin/
 LANG=C chroot ${rootfs} /debootstrap/debootstrap --second-stage
 
