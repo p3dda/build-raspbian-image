@@ -89,8 +89,8 @@ absolute_path=`cd ${relative_path}; pwd`
 delivery_path=`cd ${absolute_path}/../delivery; pwd`
 
 # define destination folder where created image file will be stored
-buildenv=`cd ${absolute_path}; cd ..; mkdir -p rpi/images; cd rpi; pwd`
-# buildenv="/tmp/rpi"
+# buildenv=`cd ${absolute_path}; cd ..; mkdir -p rpi/images; cd rpi; pwd`
+buildenv=`cd /root; mkdir -p rpi/images; cd rpi; pwd`
 
 # cd ${absolute_path}
 
@@ -130,8 +130,9 @@ EOF
 
 
 if [ "${image}" != "" ]; then
+  sync
   losetup -d ${device}
-  device=`kpartx -va ${image} | sed -E 's/.*(loop[0-9])p.*/\1/g' | head -1`
+  device=`kpartx -vas ${image} | sed -E 's/.*(loop[0-9])p.*/\1/g' | head -1`
   device="/dev/mapper/${device}"
   bootp=${device}p1
   rootp=${device}p2
